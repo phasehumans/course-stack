@@ -3,8 +3,8 @@ const Schema = mongoose.Schema
 const ObjectId = mongoose.Types.ObjectId
 const dotenv = require('dotenv')
 
-dotenv.config();
-mongoose.connect(process.env.MONGO_URL)
+// dotenv.config();
+// mongoose.connect(process.env.MONGO_URL)
 
 
 const User = new Schema({
