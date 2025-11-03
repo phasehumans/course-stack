@@ -1,22 +1,13 @@
 const {Router} = require('express')
 const adminRouter= Router()
-const {AdminModel} = require('../db')
+const {AdminModel, CourseModel} = require('../db')
 const jwt = require('jsonwebtoken')
 const dotenv = require('dotenv')
 const {z, email} = require('zod')
 const bcrypt = require('bcrypt')
+const {adminMiddleware} = require('../middleware/admin.middleware')
 
 dotenv.config()
-
-function authMiddleware(req, res, next){
-    const token = req.headers.token
-    const decodedData= jwt.verify(token, process.env.JWT_SECRET)
-
-    if(decodedData){
-        
-    }
-
-}
 
 adminRouter.post('/signup', async (req, res) => {
     const requiredBody = z.object({
@@ -81,22 +72,22 @@ adminRouter.post('signin', async (req, res) => {
     const email = req.body.email
     const password = req.body.password
 
-    const user = await AdminModel.findOne({
+    const admin = await AdminModel.findOne({
         email : email
     })
 
-    if(!user){
+    if(!admin){
         res.json({
-            message : "user doesnot exist"
+            message : "admin doesnot exist"
         })
         return
     }
 
-    const passwordMatch = bcrypt.compare(password, user.password)
+    const passwordMatch = bcrypt.compare(password, admin.password)
 
-    if(parsedData){
+    if(passwordMatch){
         const token = jwt.sign({
-            id : user.id
+            id : admin.id
         }, JWT_SECRET)
 
         res.json({
@@ -108,29 +99,61 @@ adminRouter.post('signin', async (req, res) => {
       message: "incorrect email or password",
     });
 
-    
+})
 
+adminRouter.post('/course', adminMiddleware, async (req, res) => {
+    const adminId = req.userId
 
+    // can add zod validation
+    const {title, description, price, imageUrl} = req.body
 
-    
+    const course = await CourseModel.create({
+        title : title,
+        price : price,
+        description : description,
+        imageUrl : imageUrl,
+        creatorId : adminId
+    })
 
+    res.json({
+        message : "course created",
+        courseId : course._id           // _id of db object
+    })
 
 })
 
-adminRouter.post('/course', (req, res) => {
+adminRouter.put('/course', adminMiddleware, async (req, res) => {
+    const adminId = req.userId
 
+    const {title, description, price, imageUrl, courseId} = req.body
+
+    await CourseModel.updateOne({
+        // filter change the course w/ this id and of this user
+        _id : courseId,
+        creatorId : adminId
+    }, {
+        title : title,
+        price : price,
+        description : description,
+        imageUrl : imageUrl
+    })
+
+    res.json({
+        message : "course updated"
+    })
 })
 
-adminRouter.put('/course', (req, res) => {
+adminRouter.get('/course/bulk', adminMiddleware, async (req, res) => {
+    const adminId = req.userId
 
-})
+    const courses = await CourseModel.findOne({
+        creatorId : adminId
+    })
 
-adminRouter.get('/course/bulk', (req, res) => {
-    
-})
-
-adminRouter.post('/addcontent', (req, res) => {
-
+    res.json({
+        message : "all courses",
+        courses : courses
+    })
 })
 
 module.exports = {
