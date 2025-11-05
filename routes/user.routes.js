@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt')
 const {UserModel, PurchaseModel, CourseModel} = require('../db')
 const jwt = require('jsonwebtoken')
 const dotenv = require('dotenv')
-const userMiddleware = require('../middleware/user.middleware')
+const {userMiddleware} = require('../middleware/user.middleware')
 
 dotenv.config()
 
@@ -104,7 +104,6 @@ userRouter.post('/signin', async (req, res) => {
 
 userRouter.get('/purchases', userMiddleware, async(req, res) => {
     const userId = req.userId
-
     const purchases =  await PurchaseModel.find({
         userId : userId
     })

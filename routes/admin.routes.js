@@ -13,7 +13,7 @@ adminRouter.post('/signup', async (req, res) => {
     const requiredBody = z.object({
         firstName : z.string(),
         lastName : z.string(),
-        email : z.email().string(),
+        email : z.string().email(),
         password : z.string().min(5).max(20)
     })
 
@@ -32,14 +32,19 @@ adminRouter.post('/signup', async (req, res) => {
     const email = req.body.email
     const password = req.body.password
 
+    console.log(firstName, lastName, email, password)
+
     try {
-        const hashPassword = await bcrypt.hash(password, JWT_SECRET)
+        const hashPassword = await bcrypt.hash(password, 5)
+        console.log(hashPassword)
         await AdminModel.create({
             firstName : firstName,
             lastName : lastName,
             email : email,
             password : hashPassword
         })
+
+        console.log("admin created")
     } catch (error) {
         res.json({
           message: "sign-up failed",
@@ -54,7 +59,7 @@ adminRouter.post('/signup', async (req, res) => {
 
 })
 
-adminRouter.post('signin', async (req, res) => {
+adminRouter.post('/signin', async (req, res) => {
     const requiredBody = z.object({
         email : z.string().email(),
         password : z.string().min(5).max(20)
@@ -88,7 +93,7 @@ adminRouter.post('signin', async (req, res) => {
     if(passwordMatch){
         const token = jwt.sign({
             id : admin.id
-        }, JWT_SECRET)
+        }, process.env.JWT_SECRET)
 
         res.json({
             message : token
