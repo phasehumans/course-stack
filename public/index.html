@@ -1,89 +1,122 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Course Stack</title>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Stack - Learn Modern Skills</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  </head>
-  <body>
-    <header class="site-header">
-      <div class="wrap">
-        <div class="brand">Course<span class="accent">Stack</span></div>
-        <nav class="nav">
-          <button id="nav-courses" class="nav-btn">Courses</button>
-          <button id="nav-my" class="nav-btn">My Courses</button>
-          <div class="spacer"></div>
-          <button id="btn-login" class="btn btn-ghost">Sign in</button>
-          <button id="btn-logout" class="btn btn-primary" style="display:none">Logout</button>
-        </nav>
-      </div>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">Course<span class="logo-accent">Stack</span></div>
+                <nav class="nav">
+                    <button id="nav-courses" class="nav-btn active">Courses</button>
+                    <button id="nav-my" class="nav-btn">My Courses</button>
+                </nav>
+                <div class="auth-buttons">
+                    <button id="btn-login" class="btn btn-outline">Sign in</button>
+                    <button id="btn-logout" class="btn btn-primary" style="display:none">Logout</button>
+                </div>
+            </div>
+        </div>
     </header>
 
-    <main class="wrap main">
-      <section class="hero">
-        <div>
-          <h1>Learn modern skills from industry experts</h1>
-          <p class="muted">Explore curated courses, enroll instantly, and track your learning.</p>
-          <div class="hero-ctas">
-            <button id="cta-explore" class="btn btn-primary">Explore Courses</button>
-            <button id="cta-signup" class="btn btn-ghost">Create account</button>
-          </div>
-        </div>
-        <img src="./hero-illustration.svg" alt="learning illustration" class="hero-illustration">
-      </section>
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h1 class="hero-title">Learn modern skills from industry experts</h1>
+                    <p class="hero-subtitle">Explore curated courses, enroll instantly, and track your learning
+                        progress.</p>
+                    <div class="hero-actions">
+                        <button id="cta-explore" class="btn btn-primary">Explore Courses</button>
+                        <button id="cta-signup" class="btn btn-outline">Create account</button>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <svg class="hero-illustration" width="400" height="300" viewBox="0 0 400 300" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <rect width="400" height="300" fill="#f8fafc" />
+                        <circle cx="200" cy="150" r="80" fill="#e6eef8" />
+                        <rect x="140" y="110" width="120" height="80" rx="8" fill="#2563eb" />
+                        <rect x="160" y="130" width="80" height="10" rx="5" fill="#ffffff" />
+                        <rect x="160" y="150" width="60" height="10" rx="5" fill="#ffffff" />
+                        <rect x="160" y="170" width="70" height="10" rx="5" fill="#ffffff" />
+                        <circle cx="120" cy="100" r="20" fill="#16a34a" />
+                        <circle cx="280" cy="200" r="15" fill="#f59e0b" />
+                    </svg>
+                </div>
+            </div>
+        </section>
 
-      <section id="courses-section" class="section">
-        <div class="section-head">
-          <h2>Available Courses</h2>
-          <input id="search" class="search" placeholder="Search courses..." />
-        </div>
-        <div id="coursesGrid" class="grid"></div>
-      </section>
+        <!-- Courses Section -->
+        <section id="courses-section" class="section">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Available Courses</h2>
+                    <input id="search" class="search-box" placeholder="Search courses..." type="text">
+                </div>
+                <div id="coursesGrid" class="course-grid">
+                    <!-- Courses will be loaded here -->
+                </div>
+            </div>
+        </section>
 
-      <section id="mycourses-section" class="section" style="display:none">
-        <h2>My Courses</h2>
-        <div id="myCoursesGrid" class="grid"></div>
-      </section>
+        <!-- My Courses Section -->
+        <section id="mycourses-section" class="section" style="display:none">
+            <div class="container">
+                <h2 class="section-title">My Courses</h2>
+                <div id="myCoursesGrid" class="course-grid">
+                    <!-- My courses will be loaded here -->
+                </div>
+            </div>
+        </section>
     </main>
 
-    <!-- Modal: Login / Signup -->
-    <div id="authModal" class="modal" aria-hidden="true">
-      <div class="modal-panel">
-        <button class="modal-close" id="modalClose">×</button>
-        <div class="auth-forms">
-          <div class="auth-left">
-            <h3 id="authTitle">Sign in</h3>
+    <!-- Auth Modal -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose">×</button>
+            <h3 id="authTitle" class="modal-title">Sign in</h3>
             <form id="authForm">
-              <div class="form-row" id="nameRow" style="display:none">
-                <input id="firstName" placeholder="First name" />
-                <input id="lastName" placeholder="Last name" />
-              </div>
-              <div class="form-row">
-                <input id="email" type="email" placeholder="Email" required />
-              </div>
-              <div class="form-row">
-                <input id="password" type="password" placeholder="Password" required />
-              </div>
-              <div class="form-row">
-                <button class="btn btn-primary" id="authSubmit">Continue</button>
-              </div>
+                <div class="form-group" id="nameRow" style="display:none">
+                    <div class="form-row">
+                        <input id="firstName" class="form-input" placeholder="First name">
+                        <input id="lastName" class="form-input" placeholder="Last name">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input id="email" class="form-input" type="email" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                    <input id="password" class="form-input" type="password" placeholder="Password" required>
+                </div>
+                <button class="btn btn-primary form-submit" id="authSubmit">Continue</button>
             </form>
-            <div id="authFeedback" class="muted" style="margin-top:8px"></div>
-          </div>
-          <div class="auth-right">
-            <p class="muted">Create an account to track your purchases and access course content from any device.</p>
-          </div>
+            <div id="authFeedback" class="form-footer"></div>
         </div>
-      </div>
     </div>
 
-    <footer class="site-footer">
-      <div class="wrap">© Course Stack • Built with ❤️</div>
+    <!-- Toast -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>© Course Stack • Built with ❤️ for learners everywhere</p>
+        </div>
     </footer>
 
     <script src="script.js"></script>
-  </body>
+</body>
+
 </html>
