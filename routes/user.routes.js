@@ -2,7 +2,7 @@ const {Router} = require('express')
 const userRouter = Router()
 const {z, email} = require('zod')
 const bcrypt = require('bcrypt')
-const {UserModel} = require('../db')
+const {UserModel, PurchaseModel, CourseModel} = require('../db')
 const jwt = require('jsonwebtoken')
 const dotenv = require('dotenv')
 const userMiddleware = require('../middleware/user.middleware')
@@ -102,9 +102,20 @@ userRouter.post('/signin', async (req, res) => {
     }
 })
 
-userRouter.get('/purchases', userMiddleware, (req, res) => {
+userRouter.get('/purchases', userMiddleware, async(req, res) => {
+    const userId = req.userId
+
+    const purchases =  await PurchaseModel.find({
+        userId : userId
+    })
+
+    const courseData = await CourseModel.find({
+        _id : { $in : purchases.map(x => x.courseId) }
+    })
+
     res.json({
-        message : "all courses"
+        purchase : purchases,
+        course : courseData
     })
 })
 
