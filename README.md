@@ -1,25 +1,6 @@
 # Course Stack
 
-A lightweight course-selling platform with Express + MongoDB backend and vanilla JS frontend.
-
-## Quick Start
-
-```bash
-npm install
-```
-
-Create `.env`:
-```
-MONGO_URL=<your-mongo-connection-string>
-JWT_SECRET=<admin-jwt-secret>
-JWT_SECRET_USER=<user-jwt-secret>
-```
-
-```bash
-npm run dev
-```
-
-Open http://localhost:3000
+A course-selling platform with Express + MongoDB backend and vanilla JS frontend.
 
 ## Structure
 
